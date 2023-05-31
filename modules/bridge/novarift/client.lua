@@ -12,15 +12,35 @@ local function updateCharacterCondition()
 
 end
 
-RegisterNetEvent('novarift-core:client:player:unloaded', onLogout)
+local function updateCharacterGroups()
 
-RegisterNetEvent('novarift-core:client:player:groups:updated', function (groups)
+    local character = Novarift.Player.GetCharacter()
+    if (not character) then return end
+
+    local organizations = character.organizations
+    local groups = {}
+
+    for code, info in pairs(organizations or {}) do
+        groups[code] = info.grade
+    end
+
     PlayerData.groups = groups
     OnPlayerData('groups', groups)
-end)
 
-RegisterNetEvent('novarift-core:client:player:loaded', updateCharacterCondition)
+end
+
+local function loadPlayer()
+    updateCharacterCondition()
+    updateCharacterGroups()
+end
+
+SetTimeout(500, loadPlayer)
+
+
+RegisterNetEvent('novarift-core:client:player:organizations:updated', updateCharacterGroups)
 RegisterNetEvent('novarift-core:client:player:condition:updated', updateCharacterCondition)
+RegisterNetEvent('novarift-core:client:player:loaded', loadPlayer)
+RegisterNetEvent('novarift-core:client:player:unloaded', onLogout)
 
 function client.setPlayerStatus(values)
 

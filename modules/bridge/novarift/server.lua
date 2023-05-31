@@ -7,6 +7,18 @@ CreateThread(function ()
     Items = require 'modules.items.server'
 end)
 
+local function mapOrganizationsIntoGroups(organizations)
+
+    local groups = {}
+
+    for code, info in pairs(organizations or {}) do
+        groups[code] = info.grade
+    end
+
+    return groups
+
+end
+
 local function loadPlayerInventory(source)
 
     local player = Novarift.Player.Get(source)
@@ -17,6 +29,7 @@ local function loadPlayerInventory(source)
 
     character.source = player.source
     character.sex = character.gender
+    character.groups = mapOrganizationsIntoGroups(character.organizations)
     character.dateofbirth = character.birth_date
     character.identifier = character.citizen_id
 
@@ -44,7 +57,7 @@ function server.setPlayerData(character)
         source = character.source,
         name = character.name,
         sex = character.gender,
-        groups = character.groups,
+        groups = mapOrganizationsIntoGroups(character.organizations),
         dateofbirth = character.birth_date,
     }
 end
@@ -75,11 +88,11 @@ end
 AddEventHandler('novarift-core:server:player:loaded', loadPlayerInventory)
 AddEventHandler('novarift-core:server:player:unloaded', playerDropped)
 
-AddEventHandler('novarift-core:server:player:groups:updated', function (source, groups)
+AddEventHandler('novarift-core:server:player:organizations:updated', function (source, organizations)
 
     local inventory = Inventory(source)
     if (not inventory) then return end
 
-    inventory.player.groups = groups
+    inventory.player.groups = mapOrganizationsIntoGroups(organizations)
 
 end)
