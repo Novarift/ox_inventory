@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-global
 return {
 	['testburger'] = {
 		label = 'Test Burger',
@@ -202,7 +203,20 @@ return {
 
 	['clothing'] = {
 		label = 'Clothing',
-		consume = 0,
+	},
+
+	['clothes'] = {
+		label = 'Clothes',
+		allowArmed = false,
+		consume = 1,
+		stack = false,
+		client = {
+			anim = { dict = 'clothingtie', clip = 'try_tie_negative_a' },
+			disable = { move = true, car = true, combat = true },
+			export = 'novarift-clothes.equip',
+			usetime = 3500,
+			cancel = true,
+		},
 	},
 
 	['mastercard'] = {
