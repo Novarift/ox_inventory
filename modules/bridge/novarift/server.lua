@@ -19,21 +19,26 @@ local function mapOrganizationsIntoGroups(organizations)
 
 end
 
+local function getPlayerData(character)
+    return {
+        identifier = character.id,
+        source = character.source,
+        name = character.name,
+        sex = character.gender,
+        groups = mapOrganizationsIntoGroups(character.organizations),
+        dateofbirth = character.birth_date,
+        inventory = character.inventory,
+    }
+end
+
 local function loadPlayerInventory(source)
 
-    local player = Novarift.Player.Get(source)
-    if (not player) then return end
-
-    local character = player.Character
+    local character = Novarift.Player.GetCharacter(source)
     if (not character) then return end
 
-    character.source = player.source
-    character.sex = character.gender
-    character.groups = mapOrganizationsIntoGroups(character.organizations)
-    character.dateofbirth = character.birth_date
-    character.identifier = character.citizen_id
+    character.source = source
 
-    server.setPlayerInventory(character, character.inventory)
+    server.setPlayerInventory(getPlayerData(character), character.inventory)
 
 end
 
@@ -53,13 +58,7 @@ SetTimeout(500, function ()
 end)
 
 function server.setPlayerData(character)
-    return {
-        source = character.source,
-        name = character.name,
-        sex = character.gender,
-        groups = mapOrganizationsIntoGroups(character.organizations),
-        dateofbirth = character.birth_date,
-    }
+    return getPlayerData(character)
 end
 
 function server.hasLicense(inv, license)

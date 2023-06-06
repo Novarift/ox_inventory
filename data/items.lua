@@ -208,8 +208,8 @@ return {
 	['clothes'] = {
 		label = 'Clothes',
 		allowArmed = false,
-		consume = 1,
 		stack = false,
+		consume = 1,
 		client = {
 			anim = { dict = 'clothingtie', clip = 'try_tie_negative_a' },
 			disable = { move = true, car = true, combat = true },
